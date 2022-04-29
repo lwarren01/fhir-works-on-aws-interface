@@ -1,4 +1,4 @@
-import { createLogger, Logger } from 'winston';
+import { createLogger, Logger, format } from 'winston';
 import Transport from 'winston-transport';
 
 class SimpleConsole extends Transport {
@@ -40,6 +40,7 @@ class SimpleConsole extends Transport {
 export function makeLogger(metadata?: any, logLevel: string | undefined = process.env.LOG_LEVEL): Logger {
     return createLogger({
         level: logLevel,
+        format: format.combine(format.json()),
         transports: [new SimpleConsole()],
         defaultMeta: { meta: metadata },
     });

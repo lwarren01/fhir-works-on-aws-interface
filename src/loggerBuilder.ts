@@ -40,7 +40,7 @@ class SimpleConsole extends Transport {
 export function makeLogger(metadata?: any, logLevel: string | undefined = process.env.LOG_LEVEL): Logger {
     return createLogger({
         level: logLevel,
-        format: format.combine(format.json()),
+        format: format.combine(format.json()), // restructure logs
         transports: [new SimpleConsole()],
         defaultMeta: { meta: metadata },
     });

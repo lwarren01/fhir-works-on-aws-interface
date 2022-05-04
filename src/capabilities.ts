@@ -12,6 +12,7 @@ export type CapabilityMode = 'full' | 'normative' | 'terminology';
 export interface CapabilitiesRequest {
     fhirVersion: FhirVersion;
     mode: CapabilityMode;
+    fhirServiceBaseUrl?: string;
 }
 
 export interface Capabilities {

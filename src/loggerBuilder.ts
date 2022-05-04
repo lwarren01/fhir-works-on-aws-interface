@@ -8,6 +8,7 @@ class SimpleConsole extends Transport {
         if (info[Symbol.for('splat')]) {
             msg.push(...info[Symbol.for('splat')]);
         }
+        msg.push(info[Symbol.for('message')]);
 
         // Use console here so request ID and log level can be automatically attached in CloudWatch log
         /* eslint-disable no-console */
@@ -22,9 +23,11 @@ class SimpleConsole extends Transport {
                 console.warn(...msg);
                 break;
             case 'error':
-                console.log(msg[1]);
+                console.log('trying to print message symbol');
+                console.log(msg[msg.length - 1]);
+                console.log(info[Symbol.for('message')]);
                 console.log('second item');
-                console.error('%j', ...msg);
+                console.error(...msg);
                 break;
             default:
                 console.log(...msg);
@@ -41,7 +44,7 @@ class SimpleConsole extends Transport {
 // eslint-disable-next-line import/prefer-default-export
 export function makeLogger(metadata?: any, logLevel: string | undefined = process.env.LOG_LEVEL): Logger {
     return createLogger({
-        level: logLevel, // restructure logs
+        level: logLevel,
         transports: [new SimpleConsole()],
         defaultMeta: { meta: metadata },
     });

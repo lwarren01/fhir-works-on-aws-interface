@@ -9,6 +9,8 @@ class SimpleConsole extends Transport {
             msg.push(...info[Symbol.for('splat')]);
         }
 
+        console.log('blah');
+
         // Use console here so request ID and log level can be automatically attached in CloudWatch log
         /* eslint-disable no-console */
         switch (info[Symbol.for('level')]) {
@@ -22,6 +24,7 @@ class SimpleConsole extends Transport {
                 console.warn(...msg);
                 break;
             case 'error':
+                console.log('I am here');
                 console.error(...msg);
                 break;
             default:

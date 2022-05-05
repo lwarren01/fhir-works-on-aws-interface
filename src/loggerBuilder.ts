@@ -1,5 +1,15 @@
-import { createLogger, Logger } from 'winston';
+import { createLogger, Logger, format } from 'winston';
 import Transport from 'winston-transport';
+
+const MESSAGE = Symbol.for('message');
+
+const jsonFormatter = (logEntry: any, loglevel: string) => {
+    const base = { timestamp: new Date(), level: loglevel };
+    const json = Object.assign(base, logEntry);
+    // eslint-disable-next-line no-param-reassign
+    logEntry[MESSAGE] = JSON.stringify(json);
+    return logEntry;
+};
 
 class SimpleConsole extends Transport {
     log(info: any, callback: () => void) {
@@ -8,7 +18,6 @@ class SimpleConsole extends Transport {
         if (info[Symbol.for('splat')]) {
             msg.push(...info[Symbol.for('splat')]);
         }
-        // msg.push(info[Symbol.for('message')]);
 
         // Use console here so request ID and log level can be automatically attached in CloudWatch log
         /* eslint-disable no-console */
@@ -42,6 +51,7 @@ class SimpleConsole extends Transport {
 export function makeLogger(metadata?: any, logLevel: string | undefined = process.env.LOG_LEVEL): Logger {
     return createLogger({
         level: logLevel,
+        format: format(jsonFormatter)(),
         transports: [new SimpleConsole()],
         defaultMeta: { meta: metadata },
     });

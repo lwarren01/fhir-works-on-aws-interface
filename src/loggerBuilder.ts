@@ -1,14 +1,14 @@
-import { createLogger, Logger, format } from 'winston';
+import { createLogger, Logger } from 'winston';
 import Transport from 'winston-transport';
 
 class SimpleConsole extends Transport {
     log(info: any, callback: () => void) {
         setImmediate(() => this.emit('logged', info));
-        const msg = [info.meta, info.message];
+        const msg = [info[Symbol.for('message')], info.meta, info.message];
         if (info[Symbol.for('splat')]) {
             msg.push(...info[Symbol.for('splat')]);
         }
-        msg.push(info[Symbol.for('message')]);
+        // msg.push(info[Symbol.for('message')]);
 
         // Use console here so request ID and log level can be automatically attached in CloudWatch log
         /* eslint-disable no-console */
@@ -23,10 +23,7 @@ class SimpleConsole extends Transport {
                 console.warn(...msg);
                 break;
             case 'error':
-                console.log('trying to print message symbol');
-                console.log(msg[msg.length - 1]);
-                console.log(info[Symbol.for('message')]);
-                console.log('second item');
+                // msg.splice(0, 0, info[Symbol.for('message')]);
                 console.error(...msg);
                 break;
             default:
